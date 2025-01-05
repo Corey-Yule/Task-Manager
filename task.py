@@ -28,6 +28,8 @@ class GUI:
 
         style.configure("TFrame", background="#333")
         style.configure("TButton", background="#333", foreground="#ccc", font=("Arial", 10))
+        style.configure("TLabel", background="#333", foreground="#ccc", font=("Arial", 10))
+        style.configure("TEntry", font=("Arial", 10))
         
         # Main frame to hold everything
         self.main_frame = ttk.Frame(root, padding=10)
@@ -63,6 +65,7 @@ class GUI:
         # Displaying tasks in a Text widget
         self.task_display = tk.Text(self.main_frame, height=10, width=50)
         self.task_display.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+        self.task_display.config(state=tk.DISABLED)
 
     def add_task(self):
         name = self.e1.get()
@@ -70,8 +73,9 @@ class GUI:
         due_date = self.e3.get()
         priority = self.e4.get()
 
-        if name and description and due_date and priority:
+        if name and due_date and priority:
             task = Task(name, description, due_date, priority)
+            self.task_display.config(state=tk.NORMAL)
             self.tasks.append(task)
             self.update_task_display()
             print(f"Task '{name}' added.")
@@ -79,8 +83,9 @@ class GUI:
             self.e2.delete(0, tk.END)
             self.e3.delete(0, tk.END)
             self.e4.delete(0, tk.END)
+            self.task_display.config(state=tk.DISABLED)
         else:
-            print("Please fill in all fields.")
+            print("Please fill in all of the required fields.")
 
     def mark_complete(self):
         task_name = self.e1.get()
@@ -88,10 +93,12 @@ class GUI:
             task_found = False
             for task in self.tasks:
                 if task.name == task_name:
+                    self.task_display.config(state=tk.NORMAL)
                     task.mark_complete()
                     task_found = True
                     print(f"Task '{task_name}' marked as complete.")
                     self.update_task_display()
+                    self.task_display.config(state=tk.DISABLED)
                     break
             if not task_found:
                 print(f"Task '{task_name}' not found.")
@@ -112,12 +119,17 @@ class GUI:
                 if task.name == task_name:
                     task_found = True
                     print(f"Task '{task_name}' found.")
+                    self.task_display.config(state=tk.NORMAL)
                     task.name = self.e1.get()
                     task.description = self.e2.get()
                     task.due_date = self.e3.get()
                     task.priority = self.e4.get()
-                    print(f"Task '{task_name}' edited.")
-                    self.update_task_display()
+                    if task.name and task.due_date and task.priority:
+                        print(f"Task '{task_name}' edited.")
+                        self.update_task_display()
+                        self.task_display.config(state=tk.DISABLED)
+                    else:
+                        print("Please fill in all of the required fields.")
             if not task_found:
                 print(f"Task '{task_name}' not found.")
         else:
