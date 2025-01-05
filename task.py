@@ -22,6 +22,12 @@ class GUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Task Manager")
+
+        #Styling
+        style = ttk.Style()
+
+        style.configure("TFrame", background="#333")
+        style.configure("TButton", background="#333", foreground="#ccc", font=("Arial", 10))
         
         # Main frame to hold everything
         self.main_frame = ttk.Frame(root, padding=10)
