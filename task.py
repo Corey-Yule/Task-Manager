@@ -50,8 +50,9 @@ class GUI:
         self.button_frame.grid(column=0, row=4, columnspan=2, pady=10)
 
         tk.Button(self.button_frame, text="Add Task", command=self.add_task).grid(column=0, row=0, padx=5)
-        tk.Button(self.button_frame, text="Mark Complete", command=self.mark_complete).grid(column=1, row=0, padx=5)
-        tk.Button(self.button_frame, text="Quit", command=root.quit).grid(column=2, row=0, padx=5)
+        tk.Button(self.button_frame, text="Edit Task", command=self.edit_task).grid(column=1, row=0, padx=5)
+        tk.Button(self.button_frame, text="Mark Complete", command=self.mark_complete).grid(column=2, row=0, padx=5)
+        tk.Button(self.button_frame, text="Quit", command=root.quit).grid(column=3, row=0, padx=5)
 
         # Displaying tasks in a Text widget
         self.task_display = tk.Text(self.main_frame, height=10, width=50)
@@ -97,6 +98,25 @@ class GUI:
         for task in self.tasks:
             self.task_display.insert(tk.END, str(task) + "\n")
 
+    def edit_task(self):
+        task_name = self.e1.get()
+        if task_name:
+            task_found = False
+            for task in self.tasks:
+                if task.name == task_name:
+                    task_found = True
+                    print(f"Task '{task_name}' found.")
+                    task.name = self.e1.get()
+                    task.description = self.e2.get()
+                    task.due_date = self.e3.get()
+                    task.priority = self.e4.get()
+                    print(f"Task '{task_name}' edited.")
+                    self.update_task_display()
+            if not task_found:
+                print(f"Task '{task_name}' not found.")
+        else:
+            print("Please enter the task name to edit.")
+        
 if __name__ == "__main__":
     root = tk.Tk()
     gui = GUI(root)
